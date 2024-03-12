@@ -28,7 +28,7 @@ const generatePasswordResetLink=async(email)=>{
 
 
   const sendPasswordResetLink=async(email,url)=>{
-    const passwordResetUrl = `http://localhost:4000/api/v1/user/reset-password/?url=${url}&email=${email}`;
+    const passwordResetUrl = `https://royal-naancurry-and-cafe.onrender.com//api/v1/user/reset-password/?url=${url}&email=${email}`;
     try {
         const transporter=nodemailer.createTransport({
             service:'gmail',
