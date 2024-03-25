@@ -14,15 +14,7 @@ const cookieParser = require('cookie-parser');
 
 
 
-app.use(cookieParser());
 
-
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-// Catch all other routes and return the React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
 
 
 
