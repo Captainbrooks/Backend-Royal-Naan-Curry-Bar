@@ -34,6 +34,10 @@ app.use("/api/v1",messageRoutes);
 
 connectDb();
 
+app.get("/",(req,res)=>{
+  res.send("Hello, backend is working properly and it is fetchhing the info")
+})
+
 
 
 
