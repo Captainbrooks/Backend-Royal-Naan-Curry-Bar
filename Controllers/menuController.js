@@ -252,4 +252,26 @@ const deleteFood=async(req,res)=>{
 
 }
 
-module.exports={addFoodItem,getFoodByCategory,getMainCoursesBySubCategory,getDrinksBySubCategory,getAllFoods,deleteFood};
+
+
+const SearchFood=async (req, res) => {
+    const searchTerm = req.query.term; 
+
+    try {
+       
+        const foundfoods = await Menu.find({
+            $or: [
+                { name: { $regex: searchTerm, $options: 'i' } }, 
+            ]
+        });
+
+        res.status(200).json(foundfoods);
+    } catch (error) {
+        console.error('Error searching books:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+
+module.exports={addFoodItem,getFoodByCategory,getMainCoursesBySubCategory,getDrinksBySubCategory,getAllFoods,deleteFood,SearchFood};
