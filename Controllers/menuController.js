@@ -1,5 +1,5 @@
-const Menu=require("../models/menuModel")
-const {cloudinary}=require("../cloudinary/cloudinary.js")
+const Menu = require("../models/menuModel")
+const { cloudinary } = require("../cloudinary/cloudinary.js")
 
 
 // Adding the food items based on the category and sub category
@@ -7,61 +7,61 @@ const {cloudinary}=require("../cloudinary/cloudinary.js")
 const addFoodItem = async (req, res) => {
     try {
 
-        let { name, price, description,menuType, subcategory } = req.body;
+        let { name, price, description, menuType, subcategory } = req.body;
 
-        const fileStr=req.body.image;
+        const fileStr = req.body.image;
 
-        let errorField=[];
-        
-        if(!name){
+        let errorField = [];
+
+        if (!name) {
             errorField.push("name");
         }
 
-        if(!price){
-errorField.push("price");
+        if (!price) {
+            errorField.push("price");
         }
 
-        if(!description){
+        if (!description) {
             errorField.push("description");
         }
 
-        if(!menuType){
+        if (!menuType) {
             errorField.push("menuType");
 
         }
 
-      
 
-        if(!fileStr){
+
+        if (!fileStr) {
             errorField.push("fileStr");
         }
 
 
-        if ((menuType === "Main Courses" || menuType === "Drink Menu") && !subcategory)  {
+        if ((menuType === "Main Courses" || menuType === "Drink Menu") && !subcategory) {
             errorField.push("subcategory");
         }
 
-        if(errorField.length > 0){
+        if (errorField.length > 0) {
             return res.status(400).json({
-                status:"failed",
+                status: "failed",
                 errorField,
-                error:"Please check for an error",
-          
-               
+                error: "Please check for an error",
+
+
             })
         }
-        const uploadedResponse= await cloudinary.uploader.upload_large(fileStr,{
-            upload_preset:'images_preset'
+        const uploadedResponse = await cloudinary.uploader.upload_large(fileStr, {
+            upload_preset: 'images_preset'
         });
 
-        if(!uploadedResponse){
+        if (!uploadedResponse) {
             return res.status(500).json({
-                status:"failed",
-                error:error.message
+                status: "failed",
+                error: error.message
             })
         }
 
-        const {secure_url}=uploadedResponse;
+        const { secure_url } = uploadedResponse;
 
 
         let item;
@@ -73,7 +73,7 @@ errorField.push("price");
                 name: name,
                 price: price,
                 description: description,
-                imgUrl:secure_url,
+                imgUrl: secure_url,
                 menuType: {
                     category: menuType,
                     subcategory: subcategory
@@ -84,21 +84,21 @@ errorField.push("price");
             item = await Menu.create({
                 name: name,
                 price: price,
-                imgUrl:secure_url,
+                imgUrl: secure_url,
                 description: description,
                 menuType: {
                     category: menuType
                 }
             });
         }
-        if(!item){
+        if (!item) {
             return res.status(500).json({
-                status:"failed",
-                error:error.message
+                status: "failed",
+                error: error.message
             })
         }
 
-        res.status(201).json({ success: true, message:"Successfully added a food", data: item });
+        res.status(201).json({ success: true, message: "Successfully added a food", data: item });
 
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -108,27 +108,27 @@ errorField.push("price");
 
 
 // getting a food by category..
-const getFoodByCategory=async(req,res)=>{
-    const {category}=req.params;
+const getFoodByCategory = async (req, res) => {
+    const { category } = req.params;
     try {
         const catezorizedFood = await Menu.find({ 'menuType.category': `${category}` });
 
-        if(catezorizedFood.length === 0){
-       return res.status(404).json({
-            status:"failed",
-            message:"Couldn't found any foods items by category"
-        })
+        if (catezorizedFood.length === 0) {
+            return res.status(404).json({
+                status: "failed",
+                message: "Couldn't found any foods items by category"
+            })
         }
 
         res.json({
-            count:catezorizedFood.length,
+            count: catezorizedFood.length,
             catezorizedFood
         });
-   
+
     } catch (error) {
         res.status(500).json({
-            status:"failed",
-            error:error.message
+            status: "failed",
+            error: error.message
         })
     }
 }
@@ -137,14 +137,14 @@ const getFoodByCategory=async(req,res)=>{
 
 // get a food item of Main courses by a sub category
 
-const getMainCoursesBySubCategory=async(req,res)=>{
+const getMainCoursesBySubCategory = async (req, res) => {
 
     const { subcategory } = req.params;
     try {
 
-           
-            subcategoryFood = await Menu.find({ 'menuType.subcategory': `${subcategory}` });
-    
+
+        subcategoryFood = await Menu.find({ 'menuType.subcategory': `${subcategory}` });
+
         if (subcategoryFood.length === 0) {
             return res.status(404).json({
                 status: "failed",
@@ -156,7 +156,7 @@ const getMainCoursesBySubCategory=async(req,res)=>{
             count: subcategoryFood.length,
             subcategoryFood
         });
-   
+
     } catch (error) {
         res.status(500).json({
             status: "failed",
@@ -169,14 +169,14 @@ const getMainCoursesBySubCategory=async(req,res)=>{
 
 
 
-const getDrinksBySubCategory=async(req,res)=>{
+const getDrinksBySubCategory = async (req, res) => {
 
     const { subcategory } = req.params;
     try {
 
-           
-            subcategorydrink = await Menu.find({ 'menuType.subcategory': `${subcategory}` });
-    
+
+        subcategorydrink = await Menu.find({ 'menuType.subcategory': `${subcategory}` });
+
         if (subcategorydrink.length === 0) {
             return res.status(404).json({
                 status: "failed",
@@ -188,7 +188,7 @@ const getDrinksBySubCategory=async(req,res)=>{
             count: subcategorydrink.length,
             subcategorydrink
         });
-   
+
     } catch (error) {
         res.status(500).json({
             status: "failed",
@@ -201,19 +201,19 @@ const getDrinksBySubCategory=async(req,res)=>{
 
 
 
-const getAllFoods=async(req,res)=>{
+const getAllFoods = async (req, res) => {
     try {
-        const foods=await Menu.find({});
-        if(foods.length === 0){
+        const foods = await Menu.find({});
+        if (foods.length === 0) {
             return res.status(404).json({
-                status:"failed",
-                message:"No foods found"
+                status: "failed",
+                message: "No foods found"
             })
         }
 
         res.status(200).json({
-            status:"success",
-            count:foods.length,
+            status: "success",
+            count: foods.length,
             foods
         })
     } catch (error) {
@@ -227,26 +227,26 @@ const getAllFoods=async(req,res)=>{
 
 
 
-const deleteFood=async(req,res)=>{
-    const {id}=req.params;
+const deleteFood = async (req, res) => {
+    const { id } = req.params;
     try {
-       const food=await Menu.findOneAndDelete({_id:id}) 
+        const food = await Menu.findOneAndDelete({ _id: id })
 
-       if(!food){
-        return res.status(404).json({
-            status:"failed",
-            message:"Couldn't found the food to delete"
+        if (!food) {
+            return res.status(404).json({
+                status: "failed",
+                message: "Couldn't found the food to delete"
+            })
+        }
+
+        res.status(200).json({
+            status: "success",
+            deletedfood: food
         })
-       }
-
-       res.status(200).json({
-        status:"success",
-        deletedfood:food
-       })
     } catch (error) {
         res.status(500).json({
-            status:"failed",
-            error:error.message
+            status: "failed",
+            error: error.message
         })
     }
 
@@ -254,18 +254,19 @@ const deleteFood=async(req,res)=>{
 
 
 
-const SearchFood=async (req, res) => {
-    const searchTerm = req.query.term; 
+const SearchFood = async (req, res) => {
+    const searchTerm = req.query.term;
 
     try {
-       
+
         const foundfoods = await Menu.find({
             $or: [
-                { name: { $regex: searchTerm, $options: 'i' } }, 
+                { name: { $regex: searchTerm, $options: 'i' } },
             ]
         });
 
         res.status(200).json(foundfoods);
+
     } catch (error) {
         console.error('Error searching books:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -274,4 +275,4 @@ const SearchFood=async (req, res) => {
 
 
 
-module.exports={addFoodItem,getFoodByCategory,getMainCoursesBySubCategory,getDrinksBySubCategory,getAllFoods,deleteFood,SearchFood};
+module.exports = { addFoodItem, getFoodByCategory, getMainCoursesBySubCategory, getDrinksBySubCategory, getAllFoods, deleteFood, SearchFood };
