@@ -5,6 +5,8 @@ const { cloudinary } = require("../cloudinary/cloudinary.js")
 // Adding the food items based on the category and sub category
 
 const addFoodItem = async (req, res) => {
+
+    console.log("reached..")
     try {
 
         let { name, price, description, menuType, subcategory } = req.body;
@@ -101,6 +103,7 @@ const addFoodItem = async (req, res) => {
         res.status(201).json({ success: true, message: "Successfully added a food", data: item });
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({ success: false, error: error.message });
     }
 };
