@@ -8,7 +8,7 @@ router.get("/fooditem/getfoods",getAllFoods);
 router.get("/fooditem/:category",getFoodByCategory)
 router.get("/fooditem/MainCourses/:subcategory",getMainCoursesBySubCategory)
 router.get("/fooditem/DrinkMenus/:subcategory",getDrinksBySubCategory)
-router.post("/fooditem/search",addFoodItem);
+router.post("/fooditem/",addFoodItem);
 
 router.get("/fooditem/getfoods/search",SearchFood)
 
